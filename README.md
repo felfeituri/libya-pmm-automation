@@ -1,33 +1,33 @@
 # Libya PMM Automation Pipeline
 
-**Author:** Fadwa Elfeituri ([@felfeituri](https://github.com/felfeituri))
+**Author:** Fadwa Elfeituri ([\@felfeituri](https://github.com/felfeituri))
+
+Automation system for WFP Libya's monthly Price Market Monitoring (PMM) workflow. Transforms a multi-day manual process into a streamlined pipeline that handles data collection progress monitoring, data extraction, quality assurance, MEB calculations, database management, output generation, and report preparation.
 
 > **Note:** This system is developed specifically for **WFP Libya's** Price Market Monitoring workflow. The data structure, MEB basket composition, administrative boundaries, and output formats are configured for the Libya Country Office. Other WFP country offices may have different workflows and requirements. If you are interested in adapting this pipeline for your country office, please reach out via [GitHub](https://github.com/felfeituri) to discuss configuration for your use case.
 
-Automation system for WFP Libya's monthly Price Market Monitoring (PMM) workflow. Transforms a multi-day manual process into a streamlined pipeline that handles data collection, quality assurance, MEB calculations, database management, output generation, and report preparation.
-
 ## Key Features
 
-- **87% time reduction** (days → hours per month)
-- **Automated MEB calculations** at municipality, regional, and national levels
-- **Dual environment support** (Docker containers + local execution)
-- **Historical data tracking** (24+ months stored in PostgreSQL)
-- **Professional outputs** (14 Excel files, 12 SVG charts, interactive HTML map)
-- **DataBridges integration** for WFP global systems
+-   **87% time reduction** (days → hours per month)
+-   **Automated MEB calculations** at municipality, regional, and national levels
+-   **Dual environment support** (Docker containers + local execution)
+-   **Historical data tracking** (24+ months stored in PostgreSQL)
+-   **Professional outputs** (14 Excel files, 12 SVG charts, interactive HTML map)
+-   **DataBridges integration** for WFP global systems
 
 ## Technology Stack
 
-- **Python 3.11** (pandas, SQLAlchemy, openpyxl, matplotlib, seaborn, plotly)
-- **Docker & Docker Compose** (containerized workflow)
-- **PostgreSQL 15** (historical data storage)
-- **Jupyter Notebooks** (interactive QA/QC analysis)
+-   **Python 3.11** (pandas, SQLAlchemy, openpyxl, matplotlib, seaborn, plotly)
+-   **Docker & Docker Compose** (containerized workflow)
+-   **PostgreSQL 15** (historical data storage)
+-   **Jupyter Notebooks** (interactive QA/QC analysis)
 
 ## Pipeline Overview
 
 The monthly workflow consists of **7 phases**:
 
 | Phase | Script | Environment | Description |
-|-------|--------|-------------|-------------|
+|----------------|----------------|--------------------|--------------------|
 | 1 | `01_run_data_export.py` | Local | Export raw data from WFP MoDa API |
 | 2 | `02_run_qaqc.py` | Local | QA/QC analysis with Jupyter notebooks |
 | 3 | `03_run_preprocessing.py` | Docker | MEB calculations & exchange rate processing |
@@ -40,7 +40,7 @@ The monthly workflow consists of **7 phases**:
 
 ## Project Structure
 
-```
+```         
 ├── config.py                  # Configuration (uses environment variables)
 ├── requirements.txt           # Python dependencies
 ├── Dockerfile                 # Docker build configuration
@@ -80,27 +80,27 @@ The monthly workflow consists of **7 phases**:
 
 ### Prerequisites
 
-- **Docker Desktop 4.0+** ([download](https://www.docker.com/products/docker-desktop))
-- **Python 3.11+** ([download](https://www.python.org/downloads/))
-- **OneDrive** sync with SharePoint team drive
-- **WFP MoDa** account with API token
+-   **Docker Desktop 4.0+** ([download](https://www.docker.com/products/docker-desktop))
+-   **Python 3.11+** ([download](https://www.python.org/downloads/))
+-   **OneDrive** sync with SharePoint team drive
+-   **WFP MoDa** account with API token
 
 ### 1. Clone the Repository
 
-```bash
+``` bash
 git clone https://github.com/YOUR_USERNAME/libya-pmm-automation.git
 cd libya-pmm-automation
 ```
 
 ### 2. Configure Environment Variables
 
-```bash
+``` bash
 cp .env.example .env
 ```
 
 Edit `.env` and fill in your credentials:
 
-```env
+``` env
 # Database
 DB_NAME=your_database_name
 DB_USER=your_database_user
@@ -117,7 +117,7 @@ PGADMIN_DEFAULT_PASSWORD=your_pgadmin_password
 
 The pipeline needs access to three OneDrive-synced folders. Create symlinks:
 
-```bash
+``` bash
 # Replace paths with your actual OneDrive sync locations
 ln -s "/path/to/your/Monthly Reports" ~/onedrive_pmm
 ln -s "/path/to/your/DataBridges" ~/databridges_pmm
@@ -128,7 +128,7 @@ ln -s "/path/to/your/Master Data" ~/masterdata_pmm
 
 Store your MoDa API token in a secure location:
 
-```bash
+``` bash
 mkdir -p ~/path/to/secure/location
 echo 'MODA_TOKEN=your_moda_token_here' > ~/path/to/secure/location/.env
 ```
@@ -137,16 +137,18 @@ Then update the `MODA_ENV_PATH` in `config.py` to point to this file.
 
 ### 5. Install Python Dependencies
 
-```bash
+``` bash
 pip install -r requirements.txt
 ```
 
 ### 6. Set Up Docker
 
-```bash
-# Create persistent volumes
-docker volume create libya_pmm_database
-docker volume create libya_pmm_pgadmin
+> **Note:** The `docker-compose.yml` uses container and volume names specific to Libya (e.g., `libya_pmm_db`, `libya_pmm_database`). If adapting for another country office, update these names in `docker-compose.yml` before proceeding.
+
+``` bash
+# Create persistent volumes (names must match docker-compose.yml)
+docker volume create <your_database_volume_name>
+docker volume create <your_pgadmin_volume_name>
 
 # Start containers
 docker-compose up -d
@@ -158,34 +160,36 @@ docker-compose ps
 ### 7. Initialize Database
 
 **Option A: Restore from backup** (if you have one)
-```bash
-docker exec -it libya_pmm_app bash scripts/00_Setup/restore_database.sh backups/your_backup.sql
+
+``` bash
+docker exec -it <app_container> bash scripts/00_Setup/restore_database.sh backups/your_backup.sql
 ```
 
 **Option B: Create from scratch**
-```bash
-docker exec -it libya_pmm_app python scripts/00_Setup/create_database_schema.py
+
+``` bash
+docker exec -it <app_container> python scripts/00_Setup/create_database_schema.py
 ```
 
 ### 8. Fonts
 
 The visualization scripts use the **Aptos** font family for charts. This is a Microsoft proprietary font and cannot be redistributed. You must provide your own:
 
-1. Locate the Aptos font files from your Microsoft Office installation
-2. Copy them to the `fonts/` directory in the project root
+1.  Locate the Aptos font files from your Microsoft Office installation
+2.  Copy them to the `fonts/` directory in the project root
 
 ## Monthly Workflow Usage
 
 ### Prerequisites (Before Each Month)
 
-1. **Update CBL exchange rates** — download from [Central Bank of Libya](https://cbl.gov.ly/en/currency-exchange-rates/) and replace `inputs/Currency Exchange Rates - The Central Bank of Libya.xlsx`
-2. **Update FAO Food Price Index** — download from [FAO](https://www.fao.org/worldfoodsituation/foodpricesindex/en/) and replace `inputs/food_price_indices_data.csv`
-3. **Get MoDa Form ID** — find the 6-digit form ID from the current month's survey on [MoDa](https://moda.wfp.org)
-4. **Verify OneDrive sync** is active
+1.  **Update CBL exchange rates** — download from [Central Bank of Libya](https://cbl.gov.ly/en/currency-exchange-rates/) and replace `inputs/Currency Exchange Rates - The Central Bank of Libya.xlsx`
+2.  **Update FAO Food Price Index** — download from [FAO](https://www.fao.org/worldfoodsituation/foodpricesindex/en/) and replace `inputs/food_price_indices_data.csv`
+3.  **Get MoDa Form ID** — find the 6-digit form ID from the current month's survey on [MoDa](https://moda.wfp.org)
+4.  **Verify OneDrive sync** is active
 
 ### Run the Pipeline
 
-```bash
+``` bash
 # Phase 1: Export data from MoDa (local)
 python 01_run_data_export.py <YEAR> <MONTH> <FORM_ID>
 
@@ -195,7 +199,7 @@ python 02_run_qaqc.py <YEAR> <MONTH>
 # ⚠️ Review QA/QC results before proceeding!
 
 # Phases 3-6: Processing, loading, outputs, visualizations (Docker)
-docker exec -it libya_pmm_app python 99_run_step03_to_step06.py <YEAR> <MONTH>
+docker exec -it <app_container> python 99_run_step03_to_step06.py <YEAR> <MONTH>
 
 # ⚠️ Manual step: Fill parallel market exchange rates when prompted
 
@@ -206,47 +210,51 @@ python 07_run_report.py <YEAR> <MONTH>
 ```
 
 **Example for December 2025:**
-```bash
+
+``` bash
 python 01_run_data_export.py 2025 12 340405
 python 02_run_qaqc.py 2025 12
-docker exec -it libya_pmm_app python 99_run_step03_to_step06.py 2025 12
+docker exec -it <app_container> python 99_run_step03_to_step06.py 2025 12
 python 07_run_report.py 2025 12
 ```
 
 ## Database Management
 
 ### Backup
-```bash
-docker exec -it libya_pmm_app bash scripts/00_Setup/backup_database.sh
+
+``` bash
+docker exec -it <app_container> bash scripts/00_Setup/backup_database.sh
 ```
 
 ### Restore
-```bash
-docker exec -it libya_pmm_app bash scripts/00_Setup/restore_database.sh backups/your_backup.sql
+
+``` bash
+docker exec -it <app_container> bash scripts/00_Setup/restore_database.sh backups/your_backup.sql
 ```
 
 ### Load Historical Data
-```bash
+
+``` bash
 # Load all available months
-docker exec -it libya_pmm_app python scripts/04_Database_Loading/load_meb_to_db.py --all
+docker exec -it <app_container> python scripts/04_Database_Loading/load_meb_to_db.py --all
 
 # Load a specific month
-docker exec -it libya_pmm_app python scripts/04_Database_Loading/load_meb_to_db.py 2025 12
+docker exec -it <app_container> python scripts/04_Database_Loading/load_meb_to_db.py 2025 12
 
 # Force reload (overwrites existing)
-docker exec -it libya_pmm_app python scripts/04_Database_Loading/load_meb_to_db.py --all --force
+docker exec -it <app_container> python scripts/04_Database_Loading/load_meb_to_db.py --all --force
 ```
 
 ### pgAdmin (Optional)
 
-Access the database UI at [http://localhost:5050](http://localhost:5050) using the credentials from your `.env` file.
+Access the database UI at <http://localhost:5050> using the credentials from your `.env` file.
 
 ## Pipeline Outputs
 
 Each monthly run generates:
 
 | Category | Files | Format | Location |
-|----------|-------|--------|----------|
+|-------------------|-----------------|-----------------|-------------------|
 | Monthly tables | 3 files (MEB comparison, commodity prices, geopoints) | Excel | `Monthly Reports/<year>/<month>/Tables/` |
 | Master data | 3 files (historical, MoM trends, YoY trends) | Excel | `Master Data/MEB/` |
 | Exchange rates | 1 file (MoM & YoY trends) | Excel | `Master Data/Exchange Rate/` |
@@ -258,34 +266,40 @@ Each monthly run generates:
 
 ## Docker Services
 
-| Service | Container | Port | Description |
-|---------|-----------|------|-------------|
-| PostgreSQL 15 | `libya_pmm_db` | 5433 | Database server |
-| pgAdmin 4 | `libya_pmm_pgadmin` | 5050 | Database management UI |
-| App | `libya_pmm_app` | — | Pipeline execution environment |
+| Service       | Port | Description                    |
+|---------------|------|--------------------------------|
+| PostgreSQL 15 | 5433 | Database server                |
+| pgAdmin 4     | 5050 | Database management UI         |
+| App           | —    | Pipeline execution environment |
+
+> Container and volume names are defined in `docker-compose.yml` and should be configured for your deployment.
 
 ## Troubleshooting
 
 ### Docker containers not starting
-```bash
+
+``` bash
 docker-compose down
 docker-compose up -d
 docker-compose logs
 ```
 
 ### Database connection failed
-- Ensure Docker containers are running: `docker-compose ps`
-- Check `.env` has correct credentials
-- Wait 30 seconds after starting containers for PostgreSQL to initialize
+
+-   Ensure Docker containers are running: `docker-compose ps`
+-   Check `.env` has correct credentials
+-   Wait 30 seconds after starting containers for PostgreSQL to initialize
 
 ### MoDa export fails
-- Verify your API token is valid
-- Check the Form ID (6 digits from the survey URL)
-- Ensure internet connection is active
+
+-   Verify your API token is valid
+-   Check the Form ID (6 digits from the survey URL)
+-   Ensure internet connection is active
 
 ### Missing fonts in charts
-- Copy Aptos font files to the `fonts/` directory
-- The fonts are proprietary and must be obtained from a Microsoft Office installation
+
+-   Copy Aptos font files to the `fonts/` directory
+-   The fonts are proprietary and must be obtained from a Microsoft Office installation
 
 ## License
 
