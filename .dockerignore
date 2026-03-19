@@ -1,0 +1,86 @@
+# ============================================================================
+# Libya PMM Automation - Docker Ignore
+# Files to exclude when building Docker image
+# ============================================================================
+
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (except README)
+*.md
+!README.md
+docs/
+
+# Output directories (will be mounted as volumes, not copied into image)
+outputs/
+!outputs/.gitkeep
+
+# Monthly Reports (will be mounted as volumes)
+Monthly Reports/
+
+# DataBridges (will be mounted as volumes)
+DataBridges/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Docker files (don't copy into image - they're used to BUILD the image)
+docker-compose.yml
+.dockerignore
+
+# Test files
+tests/
+*.test.py
+test_*.py
+
+# Development files
+.env.example
+.env.local
+*.draft.*
+
+# Database files (should be in Docker volumes, not in image)
+*.db
+*.sqlite
+*.sqlite3
+
+# Large data files (mount as volumes instead)
+*.csv
+*.xlsx
+!inputs/*.csv
+!inputs/*.xlsx

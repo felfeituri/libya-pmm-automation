@@ -1,0 +1,38 @@
+# Libya PMM - Python Dependencies (Docker Compatible)
+# Install with: pip install -r requirements.txt
+
+# Core data processing
+pandas>=2.2.0              # Use latest version (compatible with Python 3.13)
+numpy>=1.26.0
+scipy>=1.11.0              # Statistical functions for QA/QC
+openpyxl==3.1.2            # Excel file handling
+python-docx>=0.8.11        # Word document manipulation (for report properties)
+
+# Database
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0       # PostgreSQL adapter
+
+# API and web requests
+requests>=2.31.0
+python-dotenv>=1.0.0         # Environment variables for MoDa API
+
+# Visualization
+matplotlib>=3.8.0
+seaborn>=0.13.0
+plotly>=5.18.0
+
+# Geospatial (GDAL-free alternatives)
+folium==0.15.1               # For interactive maps (replaces geopandas for mapping)
+# geopandas==0.14.2          # REMOVED - requires GDAL
+# shapely==2.0.2             # REMOVED - requires GDAL  
+# fiona==1.9.5               # REMOVED - requires GDAL
+
+# Jupyter notebooks (for QA/QC automation)
+jupyter>=1.0.0
+ipykernel>=6.28.0
+notebook>=7.0.0
+nbconvert>=7.0.0          # For automated QA/QC notebook generation and execution
+nbformat>=5.7.0            # For automated QA/QC notebook generation and execution
+
+# Utilities
+python-dateutil>=2.8.0       # Date utilities (replaces pytz for most uses)

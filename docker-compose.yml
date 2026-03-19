@@ -1,0 +1,102 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: libya_pmm_db
+    environment:
+      POSTGRES_DB: ${DB_NAME:?Set DB_NAME in .env}
+      POSTGRES_USER: ${DB_USER:?Set DB_USER in .env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pmm_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - pmm_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin - Database Management UI
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: libya_pmm_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:?Set PGADMIN_DEFAULT_EMAIL in .env}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?Set PGADMIN_DEFAULT_PASSWORD in .env}
+      PGADMIN_CONFIG_SERVER_MODE: "True"
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    restart: unless-stopped
+    networks:
+      - pmm_network
+
+  # Libya PMM Application
+  app:
+    build: .
+    container_name: libya_pmm_app
+    environment:
+      # Database connection (app connects to 'postgres' service name)
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:?Set DB_NAME in .env}
+      DB_USER: ${DB_USER:?Set DB_USER in .env}
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+
+      # OneDrive paths inside container
+      MONTHLY_REPORTS_ROOT: "/app/Monthly Reports"
+      DATABRIDGES_BASE: "/app/DataBridges"
+      MASTER_DATA_BASE: "/app/Master Data"
+
+    volumes:
+      # Project files
+      - ./inputs:/app/inputs
+      - ./scripts:/app/scripts
+      - ./fonts:/app/fonts
+      - ./backups:/app/backups
+      - ./config.py:/app/config.py
+
+      # All wrapper scripts (00-07, 99)
+      - ./00_run_setup.py:/app/00_run_setup.py
+      - ./02_run_qaqc.py:/app/02_run_qaqc.py
+      - ./03_run_preprocessing.py:/app/03_run_preprocessing.py
+      - ./04_run_database_loading.py:/app/04_run_database_loading.py
+      - ./05_run_data_outputs.py:/app/05_run_data_outputs.py
+      - ./06_run_visualizations.py:/app/06_run_visualizations.py
+      - ./07_run_report.py:/app/07_run_report.py
+      - ./99_run_step03_to_step06.py:/app/99_run_step03_to_step06.py
+
+      # OneDrive folders (mount via symlinks on Mac)
+      # IMPORTANT: Create these symlinks first (see setup instructions)
+      - ~/onedrive_pmm:/app/Monthly Reports
+      - ~/databridges_pmm:/app/DataBridges
+      - ~/masterdata_pmm:/app/Master Data
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pmm_network
+    # Keep container running
+    command: tail -f /dev/null
+
+# Fixed volume names prevent data loss when renaming project folder
+volumes:
+  pmm_data:
+    name: libya_pmm_database
+    external: true  
+  pgadmin_data:
+    name: libya_pmm_pgadmin
+    external: true 
+
+networks:
+  pmm_network:
+    driver: bridge
