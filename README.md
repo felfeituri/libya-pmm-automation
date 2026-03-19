@@ -4,13 +4,8 @@
 
 Automation system for WFP Libya's monthly Price Market Monitoring (PMM) workflow. Transforms a multi-day manual process into a streamlined pipeline that handles data collection progress monitoring, data extraction, quality assurance, MEB calculations, database management, output generation, and report preparation.
 
-Automation system for WFP Libya's monthly Price Market Monitoring (PMM) workflow. Transforms a multi-day manual process into a streamlined pipeline that handles data collection progress, data extraction, quality assurance, MEB calculations, database management, output generation, and report preparation.
-
-<<<<<<< HEAD
-=======
 > **Note:** This system is developed specifically for **WFP Libya's** Price Market Monitoring workflow. The data structure, MEB basket composition, administrative boundaries, and output formats are configured for the Libya Country Office. Other WFP country offices may have different workflows and requirements. If you are interested in adapting this pipeline for your country office, please reach out via [GitHub](https://github.com/felfeituri) to discuss configuration for your use case.
 
->>>>>>> 5aba51240c5827c0daf721075447288b9801aa70
 ## Key Features
 
 -   **87% time reduction** (days → hours per month)
