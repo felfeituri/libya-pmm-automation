@@ -307,4 +307,4 @@ Copyright (c) 2025 Fadwa Elfeituri. All rights reserved.
 
 This project is the original work of **Fadwa Elfeituri**. Permission must be obtained from the author before using, modifying, or distributing this code. If you use this project or any part of it, proper credit and citation are required.
 
-For permission requests or adaptation inquiries, please contact via [GitHub](https://github.com/felfeituri).
+For permission requests or adaptation inquiries, please contact via [GitHub](https://github.com/felfeituri) or [email](mailto:fadwa.feituri@gmail.com).
