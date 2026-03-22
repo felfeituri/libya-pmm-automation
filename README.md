@@ -60,7 +60,7 @@ The monthly workflow consists of **7 phases**:
 │   ├── 00_Setup/              # Database setup & backup/restore
 │   ├── 01_Data_Export/        # MoDa API integration
 │   ├── 02_QAQC/               # Quality assurance checks
-│   ├── 03_Preprocessing/     # MEB & exchange rate processing
+│   ├── 03_Preprocessing/      # MEB & exchange rate processing
 │   ├── 04_Database_Loading/   # PostgreSQL data loading
 │   ├── 05_Data_Outputs/       # Excel file generation
 │   ├── 06_Visualizations/     # Chart & map generation
@@ -88,7 +88,7 @@ The monthly workflow consists of **7 phases**:
 ### 1. Clone the Repository
 
 ``` bash
-git clone https://github.com/YOUR_USERNAME/libya-pmm-automation.git
+git clone https://github.com/felfeituri/libya-pmm-automation.git
 cd libya-pmm-automation
 ```
 
